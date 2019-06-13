@@ -9,18 +9,26 @@ const init = function() {
       let blockpath = o.subdir + "/" + o.height + ".json"
       console.log("PLANARIA", "Reading from bitbus", blockpath)
       if (fs.existsSync(blockpath)) {
-        fs.readFile(blockpath, "utf-8", async function(err, res) {
+        fs.readFile(blockpath, "utf-8", function(err, res) {
           try {
             let d = JSON.parse(res)
-            await o.c.onblock({
-              height: o.height,
-              tx: d,
-              tape: o.tape
+            fs.readFile(o.subdir + "/mempool.json", "utf-8", async function(err2, mem) {
+              try {
+                let m = JSON.parse(mem)
+                await o.c.onblock({
+                  height: o.height,
+                  tx: d,
+                  mem: m,
+                  tape: o.tape
+                })
+                // ONLY AFTER onblock finishes, add to log
+                await tape.write("BLOCK " + d[0].blk.i + " " + Date.now(), localTape + tapeFile)
+              } catch (e2) {
+                console.log("PLANARIA", "Block queue exception mem", e2, mem, o)
+              }
             })
-            // ONLY AFTER onblock finishes, add to log
-            await tape.write("BLOCK " + d[0].blk.i + " " + Date.now(), localTape + tapeFile)
           } catch (e) {
-            console.log("PLANARIA", "Block queue exception", e, res, o)
+            console.log("PLANARIA", "Block queue exception blk", e, res, o)
           }
           cb(err)
         })
