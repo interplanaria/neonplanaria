@@ -1,0 +1,21 @@
+{
+  "name": "neonplanaria",
+  "version": "0.0.10",
+  "description": "",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint \"**/*.js\""
+  },
+  "dependencies": {
+    "better-queue": "^3.8.10",
+    "bitbus": "0.0.77",
+    "ejs": "^2.6.1",
+    "express": "^4.17.1",
+    "tail": "^2.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0"
+  }
+}
