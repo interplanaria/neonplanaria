@@ -17,10 +17,8 @@ const start = async function(o) {
     })
   })
   app.get("/query", function(req, res) {
-    let code = JSON.stringify({
-      v: 3,
-      q: { find: {}, limit: 10 }
-    }, null, 2)
+    let defaultQuery = o.default || { v: 3, q: { find: {}, limit: 10 } };
+    let code = JSON.stringify(defaultQuery, null, 2);
     res.render('explorer', {
       name: o.name,
       code: code,
