@@ -28,7 +28,8 @@ const init = function() {
               }
             })
           } catch (e) {
-            console.log("PLANARIA", "Block queue exception blk", e, res, o)
+            // todo
+//            console.log("PLANARIA", "Block queue exception blk", e, res, o)
           }
           cb(err)
         })
