@@ -8,6 +8,12 @@ const start = async function(o) {
   app.set('views', __dirname + '/views')
   app.use(express.static(__dirname + '/public'))
   const port = o.port || 3000
+  if (o.custom) {
+    o.custom({
+      core: machine,
+      app: app
+    })
+  }
   app.get(/^\/q\/([^\/]+)/, function(req, res) {
     let b64= req.params[0]
     o.onquery({
@@ -31,12 +37,6 @@ const start = async function(o) {
       name: o.name, code: code,
     })
   })
-  if (o.custom) {
-    o.custom({
-      core: machine,
-      app: app
-    })
-  }
   app.get('/', function(req, res) {
     res.sendFile(__dirname + "/public/index.html")
   })
