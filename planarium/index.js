@@ -4,16 +4,16 @@ var machine;
 const start = async function(o) {
   console.log("PLANARIUM", "initializing machine...")
   machine = await o.onstart()
+  app.set('view engine', 'ejs');
+  app.set('views', __dirname + '/views')
+  app.use(express.static(__dirname + '/public'))
+  const port = o.port || 3000
   if (o.custom) {
     o.custom({
       core: machine,
       app: app
     })
   }
-  app.set('view engine', 'ejs');
-  app.set('views', __dirname + '/views')
-  app.use(express.static(__dirname + '/public'))
-  const port = o.port || 3000
   app.get(/^\/q\/([^\/]+)/, function(req, res) {
     let b64= req.params[0]
     o.onquery({
