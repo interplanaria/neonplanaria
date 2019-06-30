@@ -2,7 +2,7 @@ const tape = require('./tape')
 const fs = require('fs')
 const Queue = require('better-queue');
 const tapeFile = "/tape.txt"
-const init = function() {
+const init = function(config) {
   return new Queue(function(o, cb) {
     let localTape = o.c.tape || process.cwd();
     if (o.type === 'block') {
@@ -59,7 +59,7 @@ const init = function() {
         cb(err)
       })
     }
-  })
+  }, config)
 }
 module.exports = {
   init: init
