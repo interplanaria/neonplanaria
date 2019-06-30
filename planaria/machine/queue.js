@@ -21,21 +21,18 @@ const init = function(config) {
                   mem: m,
                   tape: o.tape
                 })
-                // ONLY AFTER onblock finishes, add to log
                 await tape.write("BLOCK " + d[0].blk.i + " " + Date.now(), localTape + tapeFile)
+                cb()  // success
               } catch (e2) {
-                console.log("PLANARIA", "Block queue exception mem", e2, mem, o)
+                cb(e2)  // error
               }
             })
           } catch (e) {
-            // todo
-//            console.log("PLANARIA", "Block queue exception blk", e, res, o)
+            cb(e) // error
           }
-          cb(err)
         })
       } else {
-//        console.log("PLANARIA", "Block " + o.height + " doesn't exist")
-        cb()
+        cb()  // the block doesn't exist for the sub-blockchain. go to the next block.
       }
     } else if (o.type === 'mempool') {
       fs.readFile(o.subdir + "/mempool.json", "utf-8", async function(err, res) {
@@ -52,11 +49,11 @@ const init = function(config) {
             })
             // ONLY AFTER onmempool finishes successfully, add to log
             await tape.write("MEMPOOL " + o.hash + " " + Date.now(), localTape + tapeFile)
+            cb()
           }
         } catch (e) {
-          // todo
+          cb(e)
         }
-        cb(err)
       })
     }
   }, config)

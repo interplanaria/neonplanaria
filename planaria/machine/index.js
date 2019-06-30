@@ -38,11 +38,12 @@ const trystart = function(c, resolve, reject) {
   const dir = c.src.path
   if (fs.existsSync(dir)) {
     // initialize job queue
-    if (c.queue) {
-      queue = Queue.init(c.queue)
-    } else {
-      queue = Queue.init()
+    let defaultQueueConfig = {
+      maxRetries: 2,
+      retryDelay: 500
     }
+    let config = (c.queue ? Object.assign(defaultQueueConfig, c.queue) : defaultQueueConfig);
+    queue = Queue.init(config)
     mode = "PROCESS";
     queue.on('drain', function () {
       console.log("PLANARIA", "Queue drained") 
