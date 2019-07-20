@@ -5,15 +5,22 @@ const listen = function(subdir, c, q) {
   let logpath = subdir + "/tape.txt";
   let tail = new Tail(logpath)
   tail.on("line", async function(data) {
+    console.log("PLANARIA", "New line in tape", data)
     let chunks = data.split(" ")
     let type = chunks[0];
     let current = await tape.current(subdir, c)
+    console.log("PLANARIA", "current", current)
+    let msg;
     if (type === 'BLOCK') {
       let height = parseInt(chunks[1]); 
-      q.push({c: c, type: "block", height: height, subdir: subdir, tape: current.tape })
+      let msg = { c: c, type: "block", height: height, subdir: subdir, tape: current.tape }
+      console.log("PLANARIA", "scheduling", msg)
+      q.push(msg);
     } else if (type === 'MEMPOOL') {
       let hash = chunks[1];
-      q.push({c: c, type: "mempool", hash: hash, subdir: subdir, tape: current.tape })
+      let msg = { c: c, type: "mempool", hash: hash, subdir: subdir, tape: current.tape }
+      console.log("PLANARIA", "scheduling", msg)
+      q.push(msg);
     }
   });
   tail.on("error", function(error) {

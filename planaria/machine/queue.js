@@ -5,6 +5,7 @@ const tapeFile = "/tape.txt"
 const init = function(config) {
   return new Queue(function(o, cb) {
     let localTape = o.c.tape || process.cwd();
+    console.log("PLANARIA", "processing queue", o)
     if (o.type === 'block') {
       let blockpath = o.subdir + "/" + o.height + ".json"
       console.log("PLANARIA", "Reading from bitbus", blockpath)
