@@ -1,6 +1,6 @@
 {
   "name": "neonplanaria",
-  "version": "0.0.25",
+  "version": "0.0.28",
   "description": "",
   "main": "index.js",
   "author": "",
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "better-queue": "^3.8.10",
-    "bitbus": "0.0.94",
+    "bitbus": "0.0.95",
     "ejs": "^2.6.1",
     "express": "^4.17.1",
     "tail": "^2.0.2"

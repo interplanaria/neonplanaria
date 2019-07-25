@@ -9,17 +9,14 @@ const listen = function(subdir, c, q) {
     let chunks = data.split(" ")
     let type = chunks[0];
     let current = await tape.current(subdir, c)
-    console.log("PLANARIA", "current", current)
     let msg;
     if (type === 'BLOCK') {
       let height = parseInt(chunks[1]); 
       let msg = { c: c, type: "block", height: height, subdir: subdir, tape: current.tape }
-      console.log("PLANARIA", "scheduling", msg)
       q.push(msg);
     } else if (type === 'MEMPOOL') {
       let hash = chunks[1];
       let msg = { c: c, type: "mempool", hash: hash, subdir: subdir, tape: current.tape }
-      console.log("PLANARIA", "scheduling", msg)
       q.push(msg);
     }
   });

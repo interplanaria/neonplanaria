@@ -5,7 +5,6 @@ const tapeFile = "/tape.txt"
 const init = function(config) {
   return new Queue(function(o, cb) {
     let localTape = o.c.tape || process.cwd();
-    console.log("PLANARIA", "processing queue", o)
     if (o.type === 'block') {
       let blockpath = o.subdir + "/" + o.height + ".json"
       console.log("PLANARIA", "Reading from bitbus", blockpath)
@@ -25,10 +24,12 @@ const init = function(config) {
                 await tape.write("BLOCK " + d[0].blk.i + " " + Date.now(), localTape + tapeFile)
                 cb()  // success
               } catch (e2) {
+                console.log("onblock Error2 = ", e2)
                 cb(e2)  // error
               }
             })
           } catch (e) {
+            console.log("onblock Error = ", e)
             cb(e) // error
           }
         })
@@ -38,10 +39,14 @@ const init = function(config) {
     } else if (o.type === 'mempool') {
       fs.readFile(o.subdir + "/mempool.json", "utf-8", async function(err, res) {
         try {
+          console.log("mempool event = ", res)
           let d = JSON.parse(res)
+          console.log("parsed")
           let txs = d.filter(function(item) {
             return item.tx.h === o.hash
           })
+          console.log("o = ", o)
+          console.log("filtered txs = ", txs)
           if (txs.length > 0) {
             let tx = txs[0];
             await o.c.onmempool({
@@ -51,8 +56,11 @@ const init = function(config) {
             // ONLY AFTER onmempool finishes successfully, add to log
             await tape.write("MEMPOOL " + o.hash + " " + Date.now(), localTape + tapeFile)
             cb()
+          } else {
+            cb("tx doesn't exist")
           }
         } catch (e) {
+          console.log("onmempool Error = ", e)
           cb(e)
         }
       })
