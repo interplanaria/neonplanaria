@@ -14,6 +14,7 @@ const start = async function(o) {
   app.set('views', __dirname + '/views')
   app.use(express.static(__dirname + '/public'))
   const port = o.port || 3000
+  const host = o.host
   app.get(/^\/q\/([^\/]+)/, function(req, res) {
     let b64= req.params[0]
     o.onquery({
@@ -40,9 +41,15 @@ const start = async function(o) {
   app.get('/', function(req, res) {
     res.sendFile(__dirname + "/public/index.html")
   })
-  app.listen(port, () => {
-    console.log("PLANARIUM", `listening on port ${port}!`)
-  })
+  if (host) {
+    app.listen(port, host, () => {
+      console.log("PLANARIUM", `listening on ${host}:${port}!`)
+    })
+  } else {
+    app.listen(port, () => {
+      console.log("PLANARIUM", `listening on port ${port}!`)
+    })
+  }
 }
 module.exports = {
   start: start
