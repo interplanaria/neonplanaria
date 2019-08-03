@@ -291,7 +291,7 @@ var matryoshka = function(nested_keys, rows) {
       values: nested_keys.map(function(k) {
         if (!row) {
           return { k: null, v: null }
-        } else if (Array.isArray(row[k])) {
+        } else if (Array.isArray(row[k]) && typeof row[k][0] === 'object') {
           let item
           let nested_nested_keys = []
           for(let i=0; i<row[k].length; i++) {
@@ -328,6 +328,9 @@ var matryoshka = function(nested_keys, rows) {
   })
 }
 var render = function(selector, items) {
+  if (!Array.isArray(items)) {
+    items = [items]
+  }
   var d = document.createElement("div")
   d.setAttribute("id", selector);
   var c = document.createElement("div")
@@ -340,6 +343,11 @@ var render = function(selector, items) {
   document.querySelector(".window").appendChild(d)
   if (items.length > 0) {
     // sort items by key size
+    items.forEach(function(item, i) {
+      if (typeof item !== 'object') {
+        items[i] = {_: item}
+      }
+    })
     var copied_items = JSON.parse(JSON.stringify(items))
     var sorted_items = copied_items.sort(function(a, b) {
       return Object.keys(b).length - Object.keys(a).length;

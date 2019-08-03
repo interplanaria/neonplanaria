@@ -4,10 +4,17 @@ var machine;
 const start = async function(o) {
   console.log("PLANARIUM", "initializing machine...")
   machine = await o.onstart()
+  if (o.custom) {
+    o.custom({
+      core: machine,
+      app: app
+    })
+  }
   app.set('view engine', 'ejs');
   app.set('views', __dirname + '/views')
   app.use(express.static(__dirname + '/public'))
   const port = o.port || 3000
+  const host = o.host
   app.get(/^\/q\/([^\/]+)/, function(req, res) {
     let b64= req.params[0]
     o.onquery({
@@ -17,10 +24,8 @@ const start = async function(o) {
     })
   })
   app.get("/query", function(req, res) {
-    let code = JSON.stringify({
-      v: 3,
-      q: { find: {}, limit: 10 }
-    }, null, 2)
+    let defaultQuery = o.default || { v: 3, q: { find: {}, limit: 10 } };
+    let code = JSON.stringify(defaultQuery, null, 2);
     res.render('explorer', {
       name: o.name,
       code: code,
@@ -33,18 +38,18 @@ const start = async function(o) {
       name: o.name, code: code,
     })
   })
-  if (o.custom) {
-    o.custom({
-      core: machine,
-      app: app
-    })
-  }
   app.get('/', function(req, res) {
     res.sendFile(__dirname + "/public/index.html")
   })
-  app.listen(port, () => {
-    console.log("PLANARIUM", `listening on port ${port}!`)
-  })
+  if (host) {
+    app.listen(port, host, () => {
+      console.log("PLANARIUM", `listening on ${host}:${port}!`)
+    })
+  } else {
+    app.listen(port, () => {
+      console.log("PLANARIUM", `listening on port ${port}!`)
+    })
+  }
 }
 module.exports = {
   start: start

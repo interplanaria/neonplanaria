@@ -4,16 +4,25 @@ const tape = require('./machine/tape')
 const bitbus = require('bitbus')
 const validate = function(p) {
   let errors = [];
-  if (p.filter) {
-    if (p.filter.q) {
-      if (!p.filter.q.find) {
-        errors.push("require a filter.q.find attribute")
-      }
-    } else {
-      errors.push("require a filter.q attribute")
+  if (p.src) {
+    if (!p.src.from) {
+      errors.push("src must have 'from' attribute")
+    } 
+    if (!p.src.path) {
+      errors.push("src must have 'path' attribute")
     }
   } else {
-    errors.push("require a filter attribute")
+    if (p.filter) {
+      if (p.filter.q) {
+        if (!p.filter.q.find) {
+          errors.push("require a filter.q.find attribute")
+        }
+      } else {
+        errors.push("require a filter.q attribute")
+      }
+    } else {
+      errors.push("require a filter attribute")
+    }
   }
   return errors;
 }
@@ -23,13 +32,16 @@ const start = async function(p) {
     console.log("PLANARIA", errors.join("\n"));
     process.exit(1);
   } else {
-    await bitbus.init() // generate bitbus key if it doesn't exist yet
-    let buspath = await bitbus.build(p.filter)    
+    let buspath;
     if (!p.src) {
+      await bitbus.init() // generate bitbus key if it doesn't exist yet
+      buspath = await bitbus.build(p.filter)    
       p.src = {
         from: p.filter.from,
         path: buspath
       }
+    } else {
+      buspath = p.src.path;
     }
     if (!p.tape) p.tape = process.cwd()
     let current = await tape.current(buspath, p)
