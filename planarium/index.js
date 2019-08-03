@@ -23,7 +23,11 @@ const start = async function(o) {
       core: machine
     })
   })
+<<<<<<< HEAD
   app.get("/query", function(_, res) {
+=======
+  app.get("/query", function(req, res) {
+>>>>>>> 17d565b76f6ce1e337fccd8399ed8a7a0e34643e
     let defaultQuery = o.default || { v: 3, q: { find: {}, limit: 10 } };
     let code = JSON.stringify(defaultQuery, null, 2);
     res.render('explorer', {
@@ -38,7 +42,11 @@ const start = async function(o) {
       name: o.name, code: code,
     })
   })
+<<<<<<< HEAD
   app.get('/', function(_, res) {
+=======
+  app.get('/', function(req, res) {
+>>>>>>> 17d565b76f6ce1e337fccd8399ed8a7a0e34643e
     res.sendFile(__dirname + "/public/index.html")
   })
   if (host) {
