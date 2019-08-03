@@ -23,7 +23,7 @@ const start = async function(o) {
       core: machine
     })
   })
-  app.get("/query", function(req, res) {
+  app.get("/query", function(_, res) {
     let defaultQuery = o.default || { v: 3, q: { find: {}, limit: 10 } };
     let code = JSON.stringify(defaultQuery, null, 2);
     res.render('explorer', {
@@ -38,7 +38,7 @@ const start = async function(o) {
       name: o.name, code: code,
     })
   })
-  app.get('/', function(req, res) {
+  app.get('/', function(_, res) {
     res.sendFile(__dirname + "/public/index.html")
   })
   if (host) {

@@ -1,0 +1,11 @@
+{
+  "bitbus": 1,
+  "name": "twetch",
+  "from": 593860,
+  "q": {
+    "find": {
+      "out.s1": "19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut",
+      "out.s22": "twetch"
+    }
+  }
+}
