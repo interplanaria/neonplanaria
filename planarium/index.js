@@ -38,15 +38,7 @@ const start = async function(o) {
       name: o.name, code: code,
     })
   })
-<<<<<<< HEAD
   app.get('/', function(_, res) {
-=======
-<<<<<<< HEAD
-  app.get('/', function(_, res) {
-=======
-  app.get('/', function(req, res) {
->>>>>>> 17d565b76f6ce1e337fccd8399ed8a7a0e34643e
->>>>>>> 22089f397ed962b2d88b27d45bc199cd259017ab
     res.sendFile(__dirname + "/public/index.html")
   })
   if (host) {
