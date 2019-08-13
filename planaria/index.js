@@ -2,6 +2,7 @@ const machine = require('./machine/index')
 const script = require('./script/index')
 const tape = require('./machine/tape')
 const bitbus = require('bitbus')
+const path = require('path')
 const validate = function(p) {
   let errors = [];
   if (p.src) {
@@ -33,8 +34,13 @@ const start = async function(p) {
     process.exit(1);
   } else {
     let buspath;
+    if (p.tape) {
+      p.tape = path.resolve(".", p.tape)
+    } else {
+      p.tape = process.cwd()
+    }
     if (!p.src) {
-      await bitbus.init() // generate bitbus key if it doesn't exist yet
+      await bitbus.init({ BUS_PATH: p.tape })
       buspath = await bitbus.build(p.filter)    
       p.src = {
         from: p.filter.from,
@@ -43,7 +49,6 @@ const start = async function(p) {
     } else {
       buspath = p.src.path;
     }
-    if (!p.tape) p.tape = process.cwd()
     let current = await tape.current(buspath, p)
     console.log("PLANARIA", "onstart() ... ")
     await p.onstart(current);
