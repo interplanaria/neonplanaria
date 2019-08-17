@@ -2,6 +2,7 @@ const machine = require('./machine/index')
 const script = require('./script/index')
 const tape = require('./machine/tape')
 const bitbus = require('bitbus')
+const path = require('path')
 const validate = function(p) {
   let errors = [];
   if (p.src) {
@@ -32,18 +33,35 @@ const start = async function(p) {
     console.log("PLANARIA", errors.join("\n"));
     process.exit(1);
   } else {
+    /*
+    * cases:
+    * 1. default bus path + default tape path: (!p.tape && !p.src) => use current path for p.tape, initialize bus at current path.
+    * 2. custom bus path + default tape path: (!p.tape && p.src) => use current path for p.tape, use the bus path 
+    * 3. custom bus path + custom tape path: (p.tape && p.src) => use the custom path for p.tape, use the bus path
+    * 4. default bus path + custom tape path: (p.tape && !p.src) => use the custom path for p.tape, initialize bus at p.tape
+    */
     let buspath;
+    if (p.tape) {
+      // if 'tape' exists, use that as the tape path
+      p.tape = path.resolve(".", p.tape)
+    } else {
+      // if 'tape' doesn't exist, use current path as tape path
+      p.tape = process.cwd()
+    }
     if (!p.src) {
-      await bitbus.init() // generate bitbus key if it doesn't exist yet
+      // if 'src' doesn't exist,
+      // initialize bitbus with tape path
+      await bitbus.init({ BUS_PATH: p.tape })
       buspath = await bitbus.build(p.filter)    
+      // set 'src' with the initialized buspath and 'filter.from'
       p.src = {
         from: p.filter.from,
         path: buspath
       }
     } else {
+      // if 'src' exists, assume that bitbus is already initialized, and use 'src.path' as buspath
       buspath = p.src.path;
     }
-    if (!p.tape) p.tape = process.cwd()
     let current = await tape.current(buspath, p)
     console.log("PLANARIA", "onstart() ... ")
     await p.onstart(current);
