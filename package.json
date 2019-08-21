@@ -1,6 +1,6 @@
 {
   "name": "neonplanaria",
-  "version": "0.0.38",
+  "version": "0.0.39",
   "description": "",
   "main": "index.js",
   "author": "",
@@ -9,8 +9,8 @@
     "lint": "./node_modules/.bin/eslint \"**/*.js\""
   },
   "dependencies": {
+    "bitbus": "0.0.127",
     "better-queue": "^3.8.10",
-    "bitbus": "0.0.126",
     "ejs": "^2.6.1",
     "express": "^4.17.1",
     "tail": "^2.0.2"
