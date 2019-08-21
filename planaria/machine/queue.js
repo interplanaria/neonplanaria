@@ -14,14 +14,16 @@ const init = function(config) {
             let d = JSON.parse(res)
             fs.readFile(o.subdir + "/mempool.json", "utf-8", async function(err2, mem) {
               try {
-                let m = JSON.parse(mem)
-                await o.c.onblock({
-                  height: o.height,
-                  tx: d,
-                  mem: m,
-                  tape: o.tape
-                })
-                await tape.write("BLOCK " + d[0].blk.i + " " + Date.now(), localTape + tapeFile)
+                if (o.c.onblock) {
+                  let m = JSON.parse(mem)
+                  await o.c.onblock({
+                    height: o.height,
+                    tx: d,
+                    mem: m,
+                    tape: o.tape
+                  })
+                  await tape.write("BLOCK " + d[0].blk.i + " " + Date.now(), localTape + tapeFile)
+                }
                 cb()  // success
               } catch (e2) {
                 cb(e2)  // error
@@ -43,12 +45,14 @@ const init = function(config) {
           })
           if (txs.length > 0) {
             let tx = txs[0];
-            await o.c.onmempool({
-              tx: tx,
-              tape: o.tape
-            })
-            // ONLY AFTER onmempool finishes successfully, add to log
-            await tape.write("MEMPOOL " + o.hash + " " + Date.now(), localTape + tapeFile)
+            if (o.c.onmempool) {
+              await o.c.onmempool({
+                tx: tx,
+                tape: o.tape
+              })
+              // ONLY AFTER onmempool finishes successfully, add to log
+              await tape.write("MEMPOOL " + o.hash + " " + Date.now(), localTape + tapeFile)
+            }
             cb()
           } else {
             cb("tx doesn't exist")

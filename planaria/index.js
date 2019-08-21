@@ -64,7 +64,7 @@ const start = async function(p) {
     }
     let current = await tape.current(buspath, p)
     console.log("PLANARIA", "onstart() ... ")
-    await p.onstart(current);
+    if (p.onstart) await p.onstart(current);
     console.log("PLANARIA", "starting machine...")
     await machine.start(p); 
     console.log("PLANARIA", "finshed starting!")
