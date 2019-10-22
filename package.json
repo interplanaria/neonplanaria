@@ -9,8 +9,9 @@
     "lint": "./node_modules/.bin/eslint \"**/*.js\""
   },
   "dependencies": {
-    "bitbus": "0.0.127",
     "better-queue": "^3.8.10",
+    "bitbus": "0.0.127",
+    "callsites": "^3.1.0",
     "ejs": "^2.6.1",
     "express": "^4.17.1",
     "tail": "^2.0.2"

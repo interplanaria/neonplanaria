@@ -3,6 +3,9 @@ const script = require('./script/index')
 const tape = require('./machine/tape')
 const bitbus = require('bitbus')
 const path = require('path')
+const fs = require('fs')
+const crypto = require('crypto')
+const callsites = require('callsites')
 const validate = function(p) {
   let errors = [];
   if (p.src) {
@@ -26,6 +29,12 @@ const validate = function(p) {
     }
   }
   return errors;
+}
+const id = () => {
+  let filename = callsites()[1].getFileName() // second file in the call stack
+  let data = fs.readFileSync(filename, "utf8")
+  let hash = crypto.createHash('sha256').update(data).digest('hex');
+  return hash;
 }
 const start = async function(p) {
   let errors = validate(p);
@@ -72,5 +81,6 @@ const start = async function(p) {
 }
 module.exports = {
   start: start,
-  exec: script.exec
+  exec: script.exec,
+  id: id
 }
