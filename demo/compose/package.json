@@ -1,0 +1,12 @@
+{
+  "name": "neon-stack",
+  "version": "1.0.0",
+  "main": "planaria.js",
+  "dependencies": {
+    "bitquery": "^0.3.138",
+    "mongodb": "^3.3.3",
+    "neonplanaria": "0.0.39"
+  },
+  "devDependencies": {},
+  "license": "ISC"
+}
