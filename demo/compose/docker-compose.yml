@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  planaria:
+    container_name: planaria
+    restart: always
+    build:
+      context: .
+      dockerfile: planaria.Dockerfile
+    volumes:
+      - /srv/planarium/bus/:/usr/app/bus
+    environment:
+      MONGO_URI: 'mongodb://planaria_mongo:27017'
+      MONGO_INSTANCE_NAME: planaria_mongo
+    links:
+      - planaria_mongo
+  
+  planarium:
+    container_name: planarium
+    restart: always
+    build:
+      context: .
+      dockerfile: planarium.Dockerfile
+    environment:
+      MONGO_URI: 'mongodb://planaria_mongo:27017'
+      MONGO_INSTANCE_NAME: planaria_mongo
+      PLANARIUM_PORT: 7070
+    expose:
+      - "7070"
+    links:
+      - planaria_mongo
+      - planaria
+
+  planaria_mongo:
+    container_name: planaria_mongo
+    image: mongo
+    volumes: 
+      - /srv/planarium/mongo:/data/db
+    expose:
+      - "27017"
