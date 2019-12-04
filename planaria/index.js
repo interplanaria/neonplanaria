@@ -30,8 +30,8 @@ const validate = function(p) {
   }
   return errors;
 }
-const id = () => {
-  let filename = callsites()[1].getFileName() // second file in the call stack
+const id = (filename) => {
+  if (!filename) filename = callsites()[1].getFileName() // second file in the call stack
   let data = fs.readFileSync(filename, "utf8")
   let hash = crypto.createHash('sha256').update(data).digest('hex');
   return hash;
