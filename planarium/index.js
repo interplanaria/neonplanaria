@@ -15,7 +15,7 @@ const start = async function(o) {
   app.use(express.static(__dirname + '/public'))
   const port = o.port || 3000
   const host = o.host
-  app.get(/^\/q\/([^\/]+)/, function(req, res) {
+  app.get(/^\/q\/(.+)$/, function(req, res) {
     let b64= req.params[0]
     o.onquery({
       query: b64,
@@ -31,7 +31,7 @@ const start = async function(o) {
       code: code,
     })
   })
-  app.get(/^\/query\/([^\/]+)/, function(req, res) {
+  app.get(/^\/query\/(.+)$/, function(req, res) {
     let b64= req.params[0]
     let code = Buffer.from(b64, 'base64').toString()
     res.render('explorer', {
